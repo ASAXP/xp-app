@@ -1,0 +1,19 @@
+{
+  "name": "web-ui-util",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web/ui-util/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/web/ui-util",
+        "main": "libs/web/ui-util/src/index.ts",
+        "tsConfig": "libs/web/ui-util/tsconfig.lib.json",
+        "assets": ["libs/web/ui-util/*.md"]
+      }
+    }
+  }
+}
