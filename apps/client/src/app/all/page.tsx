@@ -1,24 +1,12 @@
-'use client';
-
-import { Story } from '@xp-app/types';
-import { DataTableDemo } from '@libs/web-ui/index';
-
-const mockStory: Story[] = [
-  {
-    id: 0,
-    type: 'story',
-    description: 'mockstory description',
-    point: 5,
-    assignee: 'dongkyu',
-    related: [],
-  },
-];
+import CurrentStoryTable from './currentStoryTable';
+import { mockStory } from '../../hooks/useStoryList';
 
 export default function page() {
   return (
-    <div>
-      <h1>story view page</h1>
-      <DataTableDemo />
+    <div className="mx-5">
+      <h1 className="text-xl">스토리 전체 뷰</h1>
+      <CurrentStoryTable storyList={mockStory} />
+      <section className="my-2">table section</section>
     </div>
   );
 }
