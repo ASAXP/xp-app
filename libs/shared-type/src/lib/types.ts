@@ -1,3 +1,9 @@
+// 프로젝트
+export type Project = {
+  id: number;
+}
+
+// 스토리
 export type Story = {
   id: number;
   // 사용자 스토리의 세 가지 종류
@@ -8,7 +14,20 @@ export type Story = {
   point: number;
   // 담당자
   assignee: string | null;
-  // 현재 진행중인 sprint에 포함되어 있는지 여부
+  // 현재 진행중인 sprint 에 포함되어 있는지 여부
   sprint: boolean;
   related: Story[];
 };
+
+// 보드 상태
+export type Column = {
+  id: number;
+  progress: string; // 사용자가 임의로 설정
+}
+
+// 진행중인 스토리
+export type Sprint = {
+  id: number;
+  story: Story;
+  column: Column;
+}
