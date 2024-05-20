@@ -14,20 +14,19 @@ export type Story = {
   point: number;
   // 담당자
   assignee: string | null;
-  // 현재 진행중인 sprint 에 포함되어 있는지 여부
-  sprint: boolean;
+  // 자식 스토리
   related: Story[];
 };
 
 // 보드 상태
-export type Column = {
+export type Progress = {
   id: number;
-  progress: string; // 사용자가 임의로 설정
+  title: string; // 사용자가 임의로 설정
 }
 
 // 진행중인 스토리
 export type Sprint = {
   id: number;
+  progress: Progress;
   story: Story;
-  column: Column;
 }
