@@ -18,6 +18,7 @@
       "@libs/web-ui/*": ["libs/web/ui/src/*"],
       "@libs/web/ui-util": ["libs/web/ui-util/src/index.ts"],
       "@xp-app/db": ["libs/db/src/index.ts"],
+      "@xp-app/services/*": ["libs/db/src/lib/services/*"],
       "@xp-app/types": ["libs/shared-type/src/index.ts"]
     }
   },
