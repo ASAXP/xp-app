@@ -3,26 +3,33 @@ import { Sprint } from '@xp-app/types';
 
 export default class sprintService {
 
-  static async findAll() {
+  static async findAll(): Promise<Sprint[]> {
     const query =
       'SELECT ' +
-      '   sp.id AS id, ' +
-      '   p.id AS progress_id, ' +
-      '   p.name AS progress_name, ' +
-      '   s.id AS story_id, ' +
-      '   s.`type` AS story_type, ' +
-      '   s.`description` AS story_description, ' +
-      '   s.content AS story_content ' +
-      'FROM sprints AS sp ' +
-      'LEFT JOIN progress AS p ' +
-      '   ON sp.progress_id = p.id ' +
-      'LEFT JOIN stories AS s ' +
-      '   ON sp.story_id = s.id ' +
+      '   id, ' +
+      '   name, ' +
+      '   description, ' +
+      '   cycle, ' +
+      '   begin_date, ' +
+      '   end_date, ' +
+      '   updated_at, ' +
+      '   created_at ' +
+      'FROM sprints ' +
       'LIMIT 10'
 
     try {
       const [results, fields] = await db.promise().query(query);
-      return results;
+      const rows = results as any[];
+      return rows.map(row => ({
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        cycle: row.cycle,
+        beginDate: row.begin_date,
+        endDate: row.end_date,
+        updatedAt: row.updated_at,
+        createdAt: row.created_at
+      }));
     } catch (error) {
       return error.sqlMessage;
     }

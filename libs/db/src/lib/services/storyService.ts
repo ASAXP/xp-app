@@ -3,7 +3,7 @@ import { Story } from '@xp-app/types';
 
 export default class storyService {
 
-  static async findAll() {
+  static async findAll(): Promise<Story[]> {
 
     const query =
       'SELECT ' +
@@ -23,22 +23,16 @@ export default class storyService {
     try {
       const [results, fields] = await db.promise().query(query);
       const rows = results as any[];
-      const stories = [] as Story[];
-
-      for (const row of rows) {
-        stories.push({
-          id: row.id,
-          type: row.type,
-          description: row.description,
-          content: row.content,
-          point: row.point,
-          assignee: '',
-          parentStory: null,
-          childStories: [],
-        })
-      }
-
-      return stories;
+      return rows.map(row => ({
+        id: row.id,
+        type: row.type,
+        description: row.description,
+        content: row.content,
+        point: row.point,
+        assignee: '',
+        parentStory: null,
+        childStories: [],
+      }));
     } catch (error) {
       return error.sqlMessage;
     }
