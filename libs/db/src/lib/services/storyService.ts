@@ -31,7 +31,8 @@ export default class storyService {
         content: row.content,
         point: row.point,
         assignee: '',
-        related: []
+        parentStory: null,
+        childStories: [],
       })
     }
 

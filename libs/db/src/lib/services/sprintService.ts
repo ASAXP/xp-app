@@ -20,26 +20,7 @@ export default class sprintService {
       '   ON sp.story_id = s.id ' +
       'LIMIT 10'
     const [results, fields] = await db.promise().query(query);
-    const rows = results as any[];
-    const sprints = [] as Sprint[];
-    for (const row of rows) {
-      sprints.push({
-        id: row.id,
-        progress: {
-          id: row.progress_id,
-          title: row.progress_title
-        },
-        story: {
-          id: row.story_id,
-          type: row.story_type,
-          description: row.story_title,
-          content: row.story_content,
-          point: 0,
-          assignee: null,
-          related: [],
-        }
-      });
-    }
-    return sprints;
+
+    return results;
   }
 }
