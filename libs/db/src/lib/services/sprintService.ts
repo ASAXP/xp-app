@@ -11,7 +11,8 @@ export default class sprintService {
       '   p.title AS progress_title, ' +
       '   s.id AS story_id, ' +
       '   s.`type` AS story_type, ' +
-      '   s.`description` AS story_title ' +
+      '   s.`description` AS story_title, ' +
+      '   s.content AS story_content ' +
       'FROM sprints AS sp ' +
       'LEFT JOIN progress AS p ' +
       '   ON sp.progress_id = p.id ' +
@@ -32,6 +33,7 @@ export default class sprintService {
           id: row.story_id,
           type: row.story_type,
           description: row.story_title,
+          content: row.story_content,
           point: 0,
           assignee: null,
           related: [],
