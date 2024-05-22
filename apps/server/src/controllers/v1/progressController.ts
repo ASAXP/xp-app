@@ -9,8 +9,8 @@ class ProgressController {
 
   async post(req: Request, res: Response) {
     try {
-      const { title } = req.body;
-      await progressService.save(title);
+      const { name } = req.body;
+      await progressService.save(name);
       res.send('Created progress successfully!');
     } catch (error) {
       console.error(error);
@@ -21,8 +21,8 @@ class ProgressController {
   async put(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { title } = req.body;
-      const update = await progressService.update(BigInt(id), title);
+      const { name } = req.body;
+      const update = await progressService.update(BigInt(id), name);
 
       if (update['affectedRows'] === 0) {
         return res.status(404).send('Progress not found');
