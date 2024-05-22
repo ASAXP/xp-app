@@ -14,7 +14,6 @@ export default class storyService {
       '   content, ' +
       '   assignee_id, ' +
       '   point, ' +
-      '   meta, ' +
       '   created_at, ' +
       '   updated_at ' +
       'FROM stories ' +
