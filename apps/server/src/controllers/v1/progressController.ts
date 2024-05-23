@@ -1,10 +1,10 @@
-import express, { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import progressService from '@xp-app/services/progressService';
 import { CreateError, NotFoundError } from '../../error';
 import { BaseController } from '../BaseController';
 
 class ProgressController extends BaseController {
-  async get(req: Request, res: Response, next: express.NextFunction) {
+  async get(req: Request, res: Response, next: NextFunction) {
     try {
       const progress = await progressService.findAll();
       super.send(res, progress, '');
@@ -13,7 +13,7 @@ class ProgressController extends BaseController {
     }
   }
 
-  async post(req: Request, res: Response, next: express.NextFunction) {
+  async post(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
       const save = await progressService.save(name);
@@ -26,7 +26,7 @@ class ProgressController extends BaseController {
     }
   }
 
-  async put(req: Request, res: Response, next: express.NextFunction) {
+  async put(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       const { name } = req.body;
@@ -41,7 +41,7 @@ class ProgressController extends BaseController {
     }
   }
 
-  async delete(req: Request, res: Response, next: express.NextFunction) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       const data = await progressService.findById(BigInt(id));
