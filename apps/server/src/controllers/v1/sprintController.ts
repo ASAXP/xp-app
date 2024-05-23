@@ -1,10 +1,16 @@
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import sprintService from '@xp-app/services/sprintService';
+import storyService from '@xp-app/services/storyService';
+import { BaseController } from '../BaseController';
 
-class SprintController {
-  async get(req: Request, res: Response) {
-    const sprints = await sprintService.findAll();
-    res.send(sprints);
+class SprintController extends BaseController {
+  async get(req: Request, res: Response, next: express.NextFunction) {
+    try {
+      const sprints = await sprintService.findAll();
+      super.send(res, sprints, '');
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

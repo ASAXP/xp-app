@@ -1,10 +1,15 @@
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import storyService from '@xp-app/services/storyService';
+import { BaseController } from '../BaseController';
 
-class StoryController {
-  async get(req: Request, res: Response) {
-    const stories = await storyService.findAll();
-    res.send(stories);
+class StoryController extends BaseController {
+  async get(req: Request, res: Response, next: express.NextFunction) {
+    try {
+      const stories = await storyService.findAll();
+      super.send(res, stories, '');
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

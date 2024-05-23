@@ -19,21 +19,17 @@ export default class storyService {
       'FROM stories ' +
       'LIMIT 10'
 
-    try {
-      const [results, fields] = await db.promise().query(query);
-      const rows = results as any[];
-      return rows.map(row => ({
-        id: row.id,
-        type: row.type,
-        description: row.description,
-        content: row.content,
-        point: row.point,
-        assignee: '',
-        parentStory: null,
-        childStories: [],
-      }));
-    } catch (error) {
-      return error.sqlMessage;
-    }
+    const [results, fields] = await db.promise().query(query);
+    const rows = results as any[];
+    return rows.map(row => ({
+      id: row.id,
+      type: row.type,
+      description: row.description,
+      content: row.content,
+      point: row.point,
+      assignee: '',
+      parentStory: null,
+      childStories: [],
+    }));
   }
 }

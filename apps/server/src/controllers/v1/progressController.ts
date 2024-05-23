@@ -1,51 +1,57 @@
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import progressService from '@xp-app/services/progressService';
+import { CreateError, NotFoundError } from '../../error';
+import { BaseController } from '../BaseController';
 
-class ProgressController {
-  async get(req: Request, res: Response) {
-    const progress = await progressService.findAll();
-    res.send(progress);
-  }
-
-  async post(req: Request, res: Response) {
+class ProgressController extends BaseController {
+  async get(req: Request, res: Response, next: express.NextFunction) {
     try {
-      const { name } = req.body;
-      await progressService.save(name);
-      res.send('Created progress successfully!');
+      const progress = await progressService.findAll();
+      super.send(res, progress, '');
     } catch (error) {
-      console.error(error);
-      res.status(500).send(error.message);
+      next(error);
     }
   }
 
-  async put(req: Request, res: Response) {
+  async post(req: Request, res: Response, next: express.NextFunction) {
+    try {
+      const { name } = req.body;
+      const save = await progressService.save(name);
+      if (!CreateError.test(save, 'Failed to create progress')) {
+        const data = await progressService.findById(save['insertId']);
+        super.send(res, data, 'Created progress successfully!');
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async put(req: Request, res: Response, next: express.NextFunction) {
     try {
       const { id } = req.params;
       const { name } = req.body;
       const update = await progressService.update(BigInt(id), name);
 
-      if (update['affectedRows'] === 0) {
-        return res.status(404).send('Progress not found');
+      if (!NotFoundError.test(update, 'Progress not found')) {
+        const data = await progressService.findById(BigInt(id));
+        super.send(res, data, 'Updated progress successfully!');
       }
-      res.send('Updated progress successfully!');
     } catch (error) {
-      console.error("error", error);
-      res.status(500).send(error.message);
+      next(error);
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response, next: express.NextFunction) {
     try {
       const { id } = req.params;
+      const data = await progressService.findById(BigInt(id));
       const deleted = await progressService.delete(BigInt(id));
 
-      if (deleted['affectedRows'] === 0) {
-        return res.status(404).send('Progress not found');
+      if (!NotFoundError.test(deleted, 'Progress not found')) {
+        super.send(res, data, 'Deleted progress successfully!');
       }
-      res.send('Deleted progress successfully!');
     } catch (error) {
-      console.error("error", error);
-      res.status(500).send(error.message);
+      next(error);
     }
   }
 }

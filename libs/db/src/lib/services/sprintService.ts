@@ -17,21 +17,17 @@ export default class sprintService {
       'FROM sprints ' +
       'LIMIT 10'
 
-    try {
-      const [results, fields] = await db.promise().query(query);
-      const rows = results as any[];
-      return rows.map(row => ({
-        id: row.id,
-        name: row.name,
-        description: row.description,
-        cycle: row.cycle,
-        beginDate: row.begin_date,
-        endDate: row.end_date,
-        updatedAt: row.updated_at,
-        createdAt: row.created_at
-      }));
-    } catch (error) {
-      return error.sqlMessage;
-    }
+    const [results, fields] = await db.promise().query(query);
+    const rows = results as any[];
+    return rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      cycle: row.cycle,
+      beginDate: row.begin_date,
+      endDate: row.end_date,
+      updatedAt: row.updated_at,
+      createdAt: row.created_at
+    }));
   }
 }
