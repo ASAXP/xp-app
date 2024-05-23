@@ -9,8 +9,8 @@ export class CreateError extends Error {
     this.statusCode = 404;
   }
 
-  static test(create: QueryResult, message: string) {
-    if (create['affectedRows'] === 0) {
+  static test(res: QueryResult, message: string) {
+    if (res['affectedRows'] === 0) {
       throw new CreateError(message);
     }
     return false;
