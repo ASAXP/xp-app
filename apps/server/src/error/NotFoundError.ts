@@ -9,7 +9,7 @@ export class NotFoundError extends Error {
     this.statusCode = 404;
   }
 
-  static test(res: QueryResult, message: string) {
+  static testResult(res: QueryResult, message: string) {
     if (res['affectedRows'] === 0) {
       throw new NotFoundError(message);
     }

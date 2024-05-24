@@ -1,64 +1,67 @@
 import { db } from '../../index';
 import { Progress } from '@xp-app/types';
+import { QueryResult } from 'mysql2';
 
 export default class progressService {
   private static TABLE_NAME = 'progress';
+  private static SQL_SELECT =
+    'SELECT ' +
+    '   id, ' +
+    '   name ' +
+    'FROM ' + progressService.TABLE_NAME
 
   static async findAll(): Promise<Progress[]> {
     const query =
-      'SELECT ' +
-      '   id, name' +
-      ' FROM ' + progressService.TABLE_NAME +
+      progressService.SQL_SELECT +
       ' LIMIT 10'
 
     const [results, fields] = await db.promise().query(query);
-    const rows = results as any[];
-    const progress: Progress[] = [];
-    for (const row of rows) {
-      progress.push({
-        id: row.id,
-        name: row.name
-      });
-    }
-    return progress;
+    return this.resultsToProgress(results);
   }
 
-  static async save(name: string) {
-    const query =
-      'INSERT INTO ' + progressService.TABLE_NAME +
-      ' (name) ' +
-      'VALUES (?)';
+  static async findById(id: bigint): Promise<Progress> {
+    const query = progressService.SQL_SELECT +
+      ' WHERE id = ?';
+    const [results, fields] = await db.promise().query(query, [id]);
+    return this.resultsToProgress(results)[0];
+  }
 
-    const [results, fields] = await db.promise().query(query, [name]);
+  static async save(progress: Partial<Progress>) {
+    const _fields = Object.keys(progress);
+    if (_fields.length === 0) {
+      throw new Error('No fields to update');
+    }
+
+    const values = _fields.map(field => progress[field]);
+    const query = `INSERT INTO ${this.TABLE_NAME} (${_fields.join(', ')}) VALUES (${_fields.map(() => '?').join(', ')});`;
+    const [results] = await db.promise().query(query, values);
     return results;
   }
 
-  static async update(id: bigint, name: string) {
-    const query =
-      'UPDATE ' + progressService.TABLE_NAME +
-      ' SET name = ? ' +
-      'WHERE id = ?';
+  static async update(id: bigint, progress: Partial<Progress>) {
+    const _fields = Object.keys(progress);
+    if (_fields.length === 0) {
+      throw new Error('No fields to update');
+    }
 
-    const [results, fields] = await db.promise().query(query, [name, id]);
+    const setClause = _fields.map(field => `${field} = ?`).join(', ');
+    const query = `UPDATE ${this.TABLE_NAME} SET ${setClause} WHERE id = ?`;
+    const values = [..._fields.map(field => (progress as any)[field]), id];
+
+    const [results] = await db.promise().query(query, values);
     return results;
   }
 
   static async delete(id: bigint) {
-    const query =
-      'DELETE FROM ' + progressService.TABLE_NAME +
-      ' WHERE id = ?';
-
-    const [results, fields] = await db.promise().query(query, [id]);
+    const query = `DELETE FROM ${progressService.TABLE_NAME} WHERE id = ?`;
+    const [results] = await db.promise().query(query, [id]);
     return results;
   }
 
-  static async findById(id: bigint) {
-    const query =
-      'SELECT ' +
-      '   id, name' +
-      ' FROM ' + progressService.TABLE_NAME +
-      ' WHERE id = ?';
-    const [results, fields] = await db.promise().query(query, [id]);
-    return results[0];
+  private static resultsToProgress(results: QueryResult): Progress[] {
+    return (results as any[]).map(row => ({
+      id: row.id,
+      name: row.name
+    }));
   }
 }
