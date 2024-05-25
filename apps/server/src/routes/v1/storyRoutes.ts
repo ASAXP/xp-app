@@ -4,6 +4,8 @@ import { validateId } from '../../middlewares/ValidateId';
 
 const router = express.Router();
 
+router.put('/:id/progress', validateId, storyController.moveProgress);
+router.put('/:id/sprint', validateId, storyController.moveSprint);
 router.put('/:id', validateId, storyController.put);
 router.delete('/:id', validateId, storyController.delete);
 router.get('/:id', validateId, storyController.get);
